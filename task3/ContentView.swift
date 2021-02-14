@@ -13,8 +13,8 @@ struct ContentView: View {
     @State private var flagLeft = true
     @State private var flagRight = true
 
-    @State private var leftNum = ""
-    @State private var rightNum = ""
+    @State private var signedLeftNum: Int?
+    @State private var signedRightNum: Int?
 
     @State private var result = "結果"
 
@@ -26,15 +26,19 @@ struct ContentView: View {
             }.padding()
 
             HStack {
-                Text("+")
-                Toggle("", isOn: $flagLeft)
-                    .labelsHidden()
-                Text("-")
+                HStack {
+                    Text("+")
+                    Toggle("", isOn: $flagLeft)
+                        .labelsHidden()
+                    Text("-")
+                }.padding()
 
-                Text("+")
-                Toggle("", isOn: $flagRight)
-                    .labelsHidden()
-                Text("-")
+                HStack {
+                    Text("+")
+                    Toggle("", isOn: $flagRight)
+                        .labelsHidden()
+                    Text("-")
+                }.padding()
             }
 
             Button("計算") {
@@ -42,21 +46,21 @@ struct ContentView: View {
                 let num1 = Int(textArray[0]) ?? 0
                 let num2 = Int(textArray[1]) ?? 0
 
-                leftNum = String(flagLeft ? num1  * -1 : num1)
-                rightNum = String(flagRight ? num2  * -1 : num2)
+                signedLeftNum = flagLeft ? num1  * -1 : num1
+                signedRightNum = flagRight ? num2  * -1 : num2
 
-                let resultNum1 = Int(leftNum) ?? 0
-                let resultNum2 = Int(rightNum) ?? 0
-
-                result = String(resultNum1 + resultNum2)
-
-
+                if let signedLeftNum = signedLeftNum,
+                   let signedRightNum = signedRightNum {
+                    result = String(signedLeftNum + signedRightNum)
+                } else {
+                    result = "結果"
+                }
             }.padding()
 
             HStack {
-                Text(leftNum)
+                Text(signedLeftNum.map { String($0) } ?? "")
                 Text("+")
-                Text(rightNum )
+                Text(signedRightNum.map { String($0) } ?? "")
             }.padding()
 
             HStack {
